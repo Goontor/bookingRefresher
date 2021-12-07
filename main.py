@@ -1,4 +1,4 @@
-
+import configparser
 from selenium import webdriver
 from selenium.webdriver.remote.webdriver import WebDriver
 from selenium.webdriver.common.by import By
@@ -8,9 +8,14 @@ from time import sleep
 
 
 def main():
+    config = configparser.ConfigParser()
+    config.sections()
+    config.read("conf/conf.ini")
+    url=config['Website']['path']
 
-    page = load("https://booking.kscgolf.org.hk/login")
-    login(page, "claverie_pierre@hotmail.fr", "dratar1er!")
+
+    page = load(config)
+    login(page, config)
     sleep(5)
     go_to_sub_menu(page, "waitingRoom")
     sleep(5)
@@ -19,26 +24,34 @@ def main():
         sleep(0.38)
 
 
-def load(path):
-
+def load(config):
+    path = config['Website']['path']
+    remote_server = config['Remote']['server']
+    driver_path = config['ChromeDriver']['driver_path']
 
     global browser
-    # chrome_options = Options()
-    chrome_options = webdriver.ChromeOptions()
+    chrome_options = Options()
+    #chrome_options = webdriver.ChromeOptions()
     chrome_options.add_experimental_option("detach", True)
-    # browser = webdriver.Chrome(r"chrome_drivers/chromedriver.exe")
-    browser = webdriver.Remote(command_executor='15.235.140.62:4444',options=chrome_options)
+    browser = webdriver.Chrome(driver_path)
+    #browser = webdriver.Remote(command_executor=remote_server,options=chrome_options)
     browser.get(path)
     return browser
 
 
-def login(driver: WebDriver, username: str, password: str):
+def login(driver: WebDriver, config):
 
-    login_btm_xpath = '//*[@id="root"]/div[1]/div[2]/div/div/form/div[2]/div/button'
+    username = config['Website']['username']
+    password = config['Website']['password']
+    login_btn_xpath = '//*[@id="root"]/div[1]/div[2]/div/div/form/div[2]/div/button'
+    popup_ok_btn_xpath = '/html/body/div[2]/div[3]/div/div[3]/button[2]'
     driver.find_element(By.ID, "username").send_keys(username)
     driver.find_element(By.ID, "password").send_keys(password)
-    driver.find_element(By.XPATH,login_btm_xpath).click()
-
+    driver.find_element(By.XPATH,login_btn_xpath).click()
+    sleep(1)
+    popup_btn = driver.find_element(By.XPATH,popup_ok_btn_xpath)
+    if popup_btn:
+        popup_btn.click()
 
 def go_to_sub_menu(driver: WebDriver, menu):
     print("goto")
