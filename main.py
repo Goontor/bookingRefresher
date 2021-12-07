@@ -16,7 +16,7 @@ def main():
 
     page = load(config)
     login(page, config)
-    sleep(5)
+    sleep(2)
     go_to_sub_menu(page, "waitingRoom")
     sleep(5)
     while (is_in_queue(page)):
@@ -32,7 +32,7 @@ def load(config):
     global browser
     chrome_options = Options()
     chrome_options = webdriver.ChromeOptions()
-    
+
     ### To use local chrome browser
     #driver_path = config['ChromeDriver']['driver_path']
     #chrome_options.add_experimental_option("detach", True)
@@ -58,7 +58,7 @@ def login(driver: WebDriver, config):
     driver.find_element(By.ID, "username").send_keys(username)
     driver.find_element(By.ID, "password").send_keys(password)
     driver.find_element(By.XPATH,login_btn_xpath).click()
-    sleep(1)
+    sleep(2)
     popup_btn = driver.find_element(By.XPATH,popup_ok_btn_xpath)
     if popup_btn:
         popup_btn.click()
