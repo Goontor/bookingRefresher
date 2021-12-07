@@ -11,20 +11,23 @@ def main():
 
     page = load("https://booking.kscgolf.org.hk/login")
     login(page, "claverie_pierre@hotmail.fr", "dratar1er!")
-    sleep(10)
+    sleep(5)
     go_to_sub_menu(page, "waitingRoom")
     sleep(5)
     while (is_in_queue(page)):
         page.refresh()
-        sleep(0.21)
+        sleep(0.38)
 
 
 def load(path):
 
-    chrome_options = Options()
-    chrome_options.add_experimental_option("detach", True)
+
     global browser
-    browser = webdriver.Chrome(r"C:\Users\Pierre\PycharmProjects\bookingRefresher\chrome_drivers\chromedriver.exe")
+    # chrome_options = Options()
+    chrome_options = webdriver.ChromeOptions()
+    chrome_options.add_experimental_option("detach", True)
+    # browser = webdriver.Chrome(r"chrome_drivers/chromedriver.exe")
+    browser = webdriver.Remote(command_executor='15.235.140.62:4444',options=chrome_options)
     browser.get(path)
     return browser
 
@@ -39,7 +42,7 @@ def login(driver: WebDriver, username: str, password: str):
 
 def go_to_sub_menu(driver: WebDriver, menu):
     print("goto")
-    booking_link_xpath = '//*[@id="root"]/div[1]'
+    booking_link_xpath = '//*[@id="root"]/div[1]/div[4]/div/div/div[2]/div[2]/h3'
     driver.get(driver.current_url+menu)
 
 
@@ -47,7 +50,7 @@ def is_in_queue(driver: WebDriver):
     result = False
     field_to_check_xpath = ""
     header = driver.find_element(By.ID,"headline")
-    string_to_test = "Please refresh the page at 5:00 PM"
+    string_to_test = "Please refresh the page at"
     print(header.get_attribute('innerHTML'))
     if  string_to_test in header.get_attribute('innerHTML'):
         print("set to false")
