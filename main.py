@@ -16,7 +16,7 @@ def main():
 
     page = load(config)
     login(page, config)
-    sleep(2)
+    sleep(5)
     go_to_sub_menu(page, "waitingRoom")
     sleep(5)
     while (is_in_queue(page)):
@@ -58,7 +58,7 @@ def login(driver: WebDriver, config):
     driver.find_element(By.ID, "username").send_keys(username)
     driver.find_element(By.ID, "password").send_keys(password)
     driver.find_element(By.XPATH,login_btn_xpath).click()
-    sleep(2)
+    sleep(5)
     popup_btn = driver.find_element(By.XPATH,popup_ok_btn_xpath)
     if popup_btn:
         popup_btn.click()
