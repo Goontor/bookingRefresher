@@ -27,14 +27,24 @@ def main():
 def load(config):
     path = config['Website']['path']
     remote_server = config['Remote']['server']
-    driver_path = config['ChromeDriver']['driver_path']
+
 
     global browser
     chrome_options = Options()
-    #chrome_options = webdriver.ChromeOptions()
+    chrome_options = webdriver.ChromeOptions()
+    
+    ### To use local chrome browser
+    #driver_path = config['ChromeDriver']['driver_path']
+    #chrome_options.add_experimental_option("detach", True)
+    #browser = webdriver.Chrome(driver_path)
+    ###
+
+    ### To use a remote selenium container
+    chrome_options = webdriver.ChromeOptions()
     chrome_options.add_experimental_option("detach", True)
-    browser = webdriver.Chrome(driver_path)
-    #browser = webdriver.Remote(command_executor=remote_server,options=chrome_options)
+    browser = webdriver.Remote(command_executor=remote_server,options=chrome_options)
+    ###
+
     browser.get(path)
     return browser
 
